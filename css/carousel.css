@@ -3,7 +3,39 @@
 /* Class section */
 .carousel-container{
     height: 200px !important;
-    border: solid 2px !important;
-    margin-left: 3px !important;
+    border: solid 1px !important;
+    border-color:rgba(200, 200, 200, 0.8) !important;
+    border-radius: 5px !important;
 }
+
+.left-arrow-button{
+    height: 100% !important;
+    background-color: rgba(150, 150, 150, 0) !important;
+    width: 50px !important;
+    float: left;
+    transition: background-color 0.5s ease;
+}
+
+.left-arrow-button:hover{
+    background-color: rgba(150, 150, 150, 0.4) !important;
+}
+.left-arrow-button:active{
+    background-color: rgba(150, 150, 150, 1) !important;
+}
+
+.right-arrow-button{
+    height: 100% !important;
+    background-color: rgba(150, 150, 150, 0) !important;
+    width: 50px !important;
+    float: right;
+    transition: background-color 0.5s ease;
+}
+
+.right-arrow-button:hover{
+    background-color: rgba(150, 150, 150, 0.4) !important;
+}
+.right-arrow-button:hover{
+    background-color: rgba(150, 150, 150, 1) !important;
+}
+
 /* Attributes section */

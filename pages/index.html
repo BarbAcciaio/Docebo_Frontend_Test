@@ -46,7 +46,36 @@
             }
         };
 
-        const carousel = new Carousel(options1);
+        const carousel1 = new Carousel(options1);
+        const options2 = {
+            container: 'my-carousel2',
+            title: 'Fresh and just uploaded content',
+            subTitle: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempo incididunt ut labore et dolore magna aliqua',
+            fetchCards: (chunkSize) => {
+                const resultPromise = new Promise((resolve, reject) => {
+                    hasError = false;
+                    exception = null;
+                    const cardArray = new Array();
+                    try {
+                        for (let i = 0; i < chunkSize; cardArray.push(Utility.getCardConfiguration()), i++);
+                    } catch (ex) {
+                        hasError = true;
+                        exception = ex;
+                    }
+
+                    setTimeout(() => {
+                        if (hasError)
+                            reject(exception);
+                        else
+                            resolve(cardArray);
+                    }, 1000);
+                });
+
+                return resultPromise;
+            }
+        };
+
+        const carousel2 = new Carousel(options2);
     </script>
 </body>
 
