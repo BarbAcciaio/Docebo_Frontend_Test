@@ -6,9 +6,7 @@ class Carousel {
 
     guid = null;
     carouselSelectors = {
-        leftArrowContainer: 'leftArrow',
         leftArrowButton: 'leftArrowButton',
-        rightArrowContainer: 'rightArrow',
         rightArrowButton: 'rightArrowButton'
     };
 
@@ -45,22 +43,26 @@ class Carousel {
     templatesHandler = (() => {
         const self = this;
 
-        const getCard = (params) => {
+        const getLeftArrow = () => `<a id="${this.carouselSelectors.leftArrowButton}" class="arrow-button left-arrow-button"></a>`;
 
-        };
+        const getRightArrow = () => `<a id="${this.carouselSelectors.rightArrowButton}" class="arrow-button right-arrow-button"></a>`;
 
-        const getLeftArrow = () => `<a id="${this.carouselSelectors.leftArrowButton}" class="left-arrow-button"></a>`;
-        // const getLeftArrow = () => `<span id="${this.carouselSelectors.leftArrowContainer}" class="left-arrow">
-        //                                 <a id="${this.carouselSelectors.leftArrowButton}" class="left-arrow-button"></a>
-        //                             </span>`;
-
-        const getRightArrow = () => `<a id="${this.carouselSelectors.rightArrowButton}" class="right-arrow-button"></a>`;
+        const getCard = () => `<div class="carousel-card">
+                                   <div class="img-container">
+                                       <img src="https://thispersondoesnotexist.com/image" alt="Title" class="card-img">
+                                   </div>
+                                   <div class="card-title">
+                                       <h4><b>John Doe</b></h4>
+                                     <p>Architect & Engineer</p>
+                                   </div>
+                               </div>`
 
         const setContainer = (containerId) => {
             try {
                 let innerHTML = '';
                 innerHTML += getLeftArrow();
                 innerHTML += getRightArrow();
+                innerHTML += getCard();
                 const carouselContainer = document.querySelector(`#${containerId}`);
                 carouselContainer.classList.add('carousel-container');
                 carouselContainer.innerHTML = innerHTML;

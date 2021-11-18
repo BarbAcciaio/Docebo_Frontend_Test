@@ -1,41 +1,73 @@
 /* Id section*/
 
 /* Class section */
+
+/* Carousel container properties */
 .carousel-container{
-    height: 200px !important;
+    height: 300px !important;
     border: solid 1px !important;
     border-color:rgba(200, 200, 200, 0.8) !important;
     border-radius: 5px !important;
+    text-align: center;
+    align-content: space-between;
 }
 
+/* Arrow button properties */
+.arrow-button{
+    height: 100% !important;
+    background-color: rgba(0, 0, 0, 0) !important;
+    width: 50px !important;
+    transition: background-color 0.5s ease;
+    position:sticky;
+    z-index: 100;
+}
+
+    /* Arrow button hover transition */
+    .arrow-button:hover{
+        background-color: rgba(150, 150, 150, 0.4) !important;
+    }
+
+    /* Arrow button active transition */
+    .arrow-button:active{
+        background-color: rgba(150, 150, 150, 1) !important;
+    }
+
+/* Backward arrow button properties */
 .left-arrow-button{
-    height: 100% !important;
-    background-color: rgba(150, 150, 150, 0) !important;
-    width: 50px !important;
-    float: left;
-    transition: background-color 0.5s ease;
+    float: left !important;
 }
 
-.left-arrow-button:hover{
-    background-color: rgba(150, 150, 150, 0.4) !important;
-}
-.left-arrow-button:active{
-    background-color: rgba(150, 150, 150, 1) !important;
-}
-
+/* Forward arrow button properties */
 .right-arrow-button{
-    height: 100% !important;
-    background-color: rgba(150, 150, 150, 0) !important;
-    width: 50px !important;
-    float: right;
-    transition: background-color 0.5s ease;
+    float: right !important;
 }
 
-.right-arrow-button:hover{
-    background-color: rgba(150, 150, 150, 0.4) !important;
-}
-.right-arrow-button:hover{
-    background-color: rgba(150, 150, 150, 1) !important;
+.carousel-card{
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+    transition: 0.3s;
+    width: 150px;
+    height: 95%;
+    position: sticky;
+    z-index: 98;
 }
 
+    .carousel-card:hover{
+        box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
+    }
+
+.card-title{
+    padding: 2px 16px;
+}
+
+.img-container{
+    width: 100%;
+    height: 150px;
+}
+
+.card-img{
+    width: 100%;
+    height: auto;
+    position: sticky;
+    z-index: 99;
+}
 /* Attributes section */
