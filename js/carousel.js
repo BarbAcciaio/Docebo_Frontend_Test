@@ -10,10 +10,15 @@ class Carousel {
 
     loadingImage = '../gif/loading.gif';
 
-    carouselSelectors = {
+    carouselIdSelectors = {
         resizableContainer: 'resizableContainer',
         leftArrowButton: 'leftArrowButton',
-        rightArrowButton: 'rightArrowButton'
+        rightArrowButton: 'rightArrowButton',
+
+    };
+
+    carouselClassSelectors = {
+        card: 'carousel-card'
     };
 
     constructor(options) {
@@ -26,22 +31,56 @@ class Carousel {
     domHandler = (() => {
         const self = this;
 
-        const fetchCards = () => {
+        const fetchCards = (cardElements) => {
             const chunkSize = this.dataHandler.getChunkSize();
-            self.options.fetchCards(chunkSize).then((cardArray) => {
-                renderCard(cardArray);
+            self.options.fetchCards(chunkSize).then((cardArray, cardElements) => {
+                updateCard(cardArray);
             }).catch((ex) => {
                 console.log(ex);
             });
         };
 
-        const renderCard = (cardArray) => {
-
+        const updateCard = (cardArray, cardElements) => {
+            try {
+                for(let i = 0; i < cardArray; i++){
+                    cardElements[i].querySelector('img').src = cardArray[i].image;
+                }
+            } catch (ex) {
+                console.error(ex);
+            }
         }
 
+        const bindEvents = () => {
+            try {
+                self.component.querySelector(`#${self.carouselIdSelectors.leftArrowButton}`).addEventListener('click', leftArrowClick);
+                self.component.querySelector(`#${self.carouselIdSelectors.rightArrowButton}`).addEventListener('click', rigthArrowClick);
+            } catch (ex) {
+                console.error(ex);
+            }
+        };
+
+        const leftArrowClick = (e) => {
+            const elem = self.component.querySelector(`#${self.carouselIdSelectors.resizableContainer}`);
+            elem.scrollBy({
+                top: 0,
+                left: self.dataHandler.getScrollWidth(elem.clientWidth, false),
+                behavior: 'smooth'
+            });
+        };
+
+        const rigthArrowClick = (e) => {
+            const elem = self.component.querySelector(`#${self.carouselIdSelectors.resizableContainer}`);
+            elem.scrollBy({
+                top: 0,
+                left: self.dataHandler.getScrollWidth(elem.clientWidth, true),
+                behavior: 'smooth'
+            });
+        };
+
         const init = () => {
-            const chunkSize = this.dataHandler.getChunkSize();        
+            const chunkSize = this.dataHandler.getChunkSize();
             self.templatesHandler.setContainer(chunkSize);
+            bindEvents();
         }
         return {
             init
@@ -51,30 +90,41 @@ class Carousel {
     templatesHandler = (() => {
         const self = this;
 
-        const getResizableContainer = (innerHTML) => `<div class="resizable-container">${innerHTML}</div>`;
+        const getResizableContainer = (innerHTML) => `<div id="${self.carouselIdSelectors.resizableContainer}" class="resizable-container">
+                                                          <div class="cards-container">${innerHTML}</div>
+                                                      </div>`;
 
-        const getLeftArrow = () => `<a id="${this.carouselSelectors.leftArrowButton}" class="arrow-button left-arrow-button material-icons"> arrow_back_ios</a>`;
+        const getLeftArrow = () => `<a id="${this.carouselIdSelectors.leftArrowButton}" class="arrow-button left-arrow-button material-icons">
+                                        arrow_back_ios
+                                    </a>`;
 
-        const getRightArrow = () => `<a id="${this.carouselSelectors.rightArrowButton}" class="arrow-button right-arrow-button material-icons md-light">arrow_forward_ios</a>`;
+        const getRightArrow = () => `<a id="${this.carouselIdSelectors.rightArrowButton}" class="arrow-button right-arrow-button material-icons">
+                                         arrow_forward_ios
+                                     </a>`;
 
-        const getCard = () => `<div class="carousel-card">
+        const getCard = () => {
+            const guid = Utility.createGuid();
+            const idList = new Array();
+            const innerHTML = `<div class="carousel-card">
                                    <div class="img-container">
-                                       <img src="${this.loadingImage}" alt="Title" class="card-img">
+                                       <img id="${guid}" src="${this.loadingImage}" alt="Title" class="card-img">
                                    </div>
                                    <div class="card-title">
                                        <h4><b>John Doe</b></h4>
                                      <p>Architect & Engineer</p>
                                    </div>
-                               </div>`
+                               </div>`;
+        }
 
         const setContainer = (chunkSize) => {
             try {
                 let innerHTML = '';
                 innerHTML += getLeftArrow();
                 innerHTML += getRightArrow();
-                for(let i = 0; i < chunkSize; innerHTML += getCard(), i++);
-                // innerHTML += getCard();
-                innerHTML = getResizableContainer(innerHTML);
+                let cardsHTML = '';
+                for (let i = 0; i < chunkSize; cardsHTML += getCard(), i++);
+                cardsHTML = getResizableContainer(cardsHTML);
+                innerHTML += cardsHTML;
                 this.component.classList.add('carousel-container');
                 this.component.innerHTML = innerHTML;
 
@@ -90,17 +140,24 @@ class Carousel {
     dataHandler = (() => {
         const self = this;
         const getChunkSize = () => {
-            return Utility.getRandomInt(this.minChunkSize, this.maxChunkSize);
+            // return Utility.getRandomInt(this.minChunkSize, this.maxChunkSize);
+            return 20;
+        }
+
+        const getScrollWidth = (elemWidth, isForward) => {
+            const mutiplier = isForward ? 1 : -1;
+            return mutiplier * Math.floor(elemWidth / 2);
         }
 
         return {
-            getChunkSize
+            getChunkSize,
+            getScrollWidth
         };
     })();
 
     init = () => {
-        for (let elem in this.carouselSelectors) {
-            this.carouselSelectors[elem] += '-' + this.guid;
+        for (let elem in this.carouselIdSelectors) {
+            this.carouselIdSelectors[elem] += '-' + this.guid;
         }
         this.domHandler.init();
     };

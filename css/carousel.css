@@ -10,43 +10,42 @@
 /* Class section */
 
 /* Carousel container properties */
-/* .carousel-container{
-    display:flex !important;
-    justify-content:center !important;
-    align-items:center !important;
-    width:100% !important;
-    height:var(--carousel-height);
-    border: solid 1px !important;
-    border-color:rgba(200, 200, 200, 0.8) !important;
-    border-radius: 5px !important;
-    position: relative;
-    overflow: hidden;
-} */
-
 .carousel-container{
-    display:flex !important;
+    /* display:flex !important; */
     justify-content:center !important;
     align-items:center !important;
-    width:100% !important;
+    /* width:100% !important; */
+    width: calc(100% - 3px);
     height:var(--carousel-height);
     border: solid 1px !important;
     border-color:rgba(200, 200, 200, 0.8) !important;
     border-radius: 5px !important;
     position: relative;
-    overflow: hidden;
+    /* overflow: hidden; */
 }
 
 .resizable-container{
+    /* display:flex !important; */
+    justify-content:center !important;
+    align-items:center !important;
+    height: var(--carousel-height);
+    overflow-x: auto;
+    overflow-y: hidden;
+    width: 100%;
+}
+    .resizable-container::-webkit-scrollbar {
+        display: none;
+    }
+
+.cards-container{
     display:flex !important;
     justify-content:center !important;
     align-items:center !important;
     height: var(--carousel-height);
     overflow: hidden;
-}
-    /* .carousel-container::-webkit-scrollbar {
-        display: none;
-    } */
+    width:fit-content;
 
+}
 /* Arrow button properties */
 .arrow-button{
     height: 100% !important;
@@ -59,6 +58,13 @@
     line-height: var(--carousel-height);
     font-size: 60px !important;
     color: var(--invisible-item);
+    cursor: pointer;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
 }
 
     /* Arrow button hover transition */

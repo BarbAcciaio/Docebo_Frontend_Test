@@ -100,13 +100,16 @@ class Utility {
 
     static image = 'https://thispersondoesnotexist.com/image';
 
+    static getImage = (size) => `https://picsum.photos/${size}`;
+
     static getCardConfiguration() {
+        const image = this.getImage(500);
         const rnd = this.getRandomInt(0, 4);
         const duration = this.getRandomInt(10, 3600);
         const type = Object.keys(this.typesList)[rnd];
         const cardinality = this.typesList[type];
 
-        return { image: this.image, type, duration, title: this.getRandomTitle(), cardinality };
+        return { image, type, duration, title: this.getRandomTitle(), cardinality };
     }
 
     static getRandomTitle(){
@@ -120,5 +123,4 @@ class Utility {
         const s4 = () => Math.floor((1 + Math.random()) * 0x10000).toString(16).substring(1);
         return s4() + s4() + '-' + s4() + '-' + s4() + '-' + s4() + '-' + s4() + s4() + s4();
     }
-
 }
