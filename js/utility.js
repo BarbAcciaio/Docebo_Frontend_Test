@@ -103,7 +103,7 @@ class Utility {
     static getImage = (size) => `https://picsum.photos/${size}`;
 
     static getCardConfiguration() {
-        const image = this.getImage(500);
+        const image = this.getImage(this.getRandomInt(300, 1000));
         const rnd = this.getRandomInt(0, 4);
         const duration = this.getRandomInt(10, 3600);
         const type = Object.keys(this.typesList)[rnd];

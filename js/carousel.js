@@ -8,10 +8,13 @@ class Carousel {
 
     guid = null;
 
+    cardGuidList = null;
+
     loadingImage = '../gif/loading.gif';
 
     carouselIdSelectors = {
         resizableContainer: 'resizableContainer',
+        cardsContainer: 'cardsContainer',
         leftArrowButton: 'leftArrowButton',
         rightArrowButton: 'rightArrowButton',
 
@@ -23,6 +26,7 @@ class Carousel {
 
     constructor(options) {
         this.guid = Utility.createGuid();
+        this.cardGuidList = new Array();
         this.options = options;
         this.component = document.querySelector(`#${options.container}`);
         this.init();
@@ -31,22 +35,28 @@ class Carousel {
     domHandler = (() => {
         const self = this;
 
-        const fetchCards = (cardElements) => {
-            const chunkSize = this.dataHandler.getChunkSize();
-            self.options.fetchCards(chunkSize).then((cardArray, cardElements) => {
-                updateCard(cardArray);
-            }).catch((ex) => {
-                console.log(ex);
-            });
-        };
-
-        const updateCard = (cardArray, cardElements) => {
+        const updateCard = (cardId, cardOptions) => {
             try {
-                for(let i = 0; i < cardArray; i++){
-                    cardElements[i].querySelector('img').src = cardArray[i].image;
-                }
+                const card = self.component.querySelector(`#${cardId}`);
+
+                card.querySelector('img').src = cardOptions.image;
+                card.querySelector('div.card-title').innerHTML = self.templatesHandler.getCardTitle(cardOptions.title);
             } catch (ex) {
                 console.error(ex);
+            }
+        }
+
+        const addCards = (chunkSize, right) => {
+            try {
+                for (let i = 0; i < chunkSize; i++){
+                    const cardObj = self.templatesHandler.getDefaultCard();
+                    cardsHTML += cardObj.innerHTML;
+                    this.cardGuidList.push(cardObj.guid);
+                    currentCardGuidList.push(cardObj.guid);
+                }
+
+            } catch (ex) {
+                log.error(ex);
             }
         }
 
@@ -60,7 +70,10 @@ class Carousel {
         };
 
         const leftArrowClick = (e) => {
-            const elem = self.component.querySelector(`#${self.carouselIdSelectors.resizableContainer}`);
+            const elem = self.component.querySelector(`#${self.carouselIdSelectors.cardsContainer}`);
+            // if(elem.offsetWidth + elem.scrollLeft >= elem.scrollWidth){
+
+            // }
             elem.scrollBy({
                 top: 0,
                 left: self.dataHandler.getScrollWidth(elem.clientWidth, false),
@@ -69,7 +82,8 @@ class Carousel {
         };
 
         const rigthArrowClick = (e) => {
-            const elem = self.component.querySelector(`#${self.carouselIdSelectors.resizableContainer}`);
+            const elem = self.component.querySelector(`#${self.carouselIdSelectors.cardsContainer}`);
+            // if(elem.scrollLeft)
             elem.scrollBy({
                 top: 0,
                 left: self.dataHandler.getScrollWidth(elem.clientWidth, true),
@@ -77,22 +91,53 @@ class Carousel {
             });
         };
 
+        const render = () => {
+            try {
+                const chunkSize = self.dataHandler.getChunkSize();
+                let innerHTML = '';
+                const currentCardGuidList = new Array();
+                innerHTML += self.templatesHandler.getLeftArrow();
+                innerHTML += self.templatesHandler.getRightArrow();
+                let cardsHTML = '';
+                for (let i = 0; i < chunkSize; i++){
+                    const cardObj = self.templatesHandler.getDefaultCard();
+                    cardsHTML += cardObj.innerHTML;
+                    this.cardGuidList.push(cardObj.guid);
+                    currentCardGuidList.push(cardObj.guid);
+                }
+                cardsHTML = self.templatesHandler.getResizableContainer(cardsHTML);
+                innerHTML += cardsHTML;
+                this.component.classList.add('carousel-container');
+                this.component.innerHTML = innerHTML;
+
+                self.dataHandler.fetchCards(chunkSize, currentCardGuidList);
+            } catch (ex) {
+                console.error(ex);
+            }
+        };
+
         const init = () => {
-            const chunkSize = this.dataHandler.getChunkSize();
-            self.templatesHandler.setContainer(chunkSize);
+            render();
             bindEvents();
         }
+
+        const removeOldestCard = () =>{
+            try {
+                self.component.querySelector(`#${self.cardGuidList[0]}`).remove();
+            } catch (ex) {
+                console.error(ex);
+            }
+        }
         return {
-            init
+            init,
+            updateCard
         };
     })();
 
     templatesHandler = (() => {
         const self = this;
 
-        const getResizableContainer = (innerHTML) => `<div id="${self.carouselIdSelectors.resizableContainer}" class="resizable-container">
-                                                          <div class="cards-container">${innerHTML}</div>
-                                                      </div>`;
+        const getResizableContainer = (innerHTML) => `<div id="${self.carouselIdSelectors.cardsContainer}" class="cards-container">${innerHTML}</div>`;
 
         const getLeftArrow = () => `<a id="${this.carouselIdSelectors.leftArrowButton}" class="arrow-button left-arrow-button material-icons">
                                         arrow_back_ios
@@ -102,38 +147,29 @@ class Carousel {
                                          arrow_forward_ios
                                      </a>`;
 
-        const getCard = () => {
-            const guid = Utility.createGuid();
-            const idList = new Array();
-            const innerHTML = `<div class="carousel-card">
+        const getDefaultCard = () => {
+            const guid =`card-${Utility.createGuid()}`;
+            const innerHTML = `<div id="${guid}" class="carousel-card">
                                    <div class="img-container">
-                                       <img id="${guid}" src="${this.loadingImage}" alt="Title" class="card-img">
+                                       <img id="" src="${this.loadingImage}" alt="Title" class="card-img">
                                    </div>
                                    <div class="card-title">
-                                       <h4><b>John Doe</b></h4>
-                                     <p>Architect & Engineer</p>
+                                       <div class="default-card-row-1"></div>
+                                       <div class="default-card-row-2"></div>
                                    </div>
                                </div>`;
+
+            return { innerHTML, guid };
         }
 
-        const setContainer = (chunkSize) => {
-            try {
-                let innerHTML = '';
-                innerHTML += getLeftArrow();
-                innerHTML += getRightArrow();
-                let cardsHTML = '';
-                for (let i = 0; i < chunkSize; cardsHTML += getCard(), i++);
-                cardsHTML = getResizableContainer(cardsHTML);
-                innerHTML += cardsHTML;
-                this.component.classList.add('carousel-container');
-                this.component.innerHTML = innerHTML;
+        const getCardTitle = (text) => `<h4><b>${text}</b></h4>`;
 
-            } catch (ex) {
-                console.log(ex);
-            }
-        }
         return {
-            getCard, setContainer
+            getDefaultCard, 
+            getResizableContainer,
+            getLeftArrow,
+            getRightArrow,
+            getCardTitle
         };
     })();
 
@@ -149,9 +185,24 @@ class Carousel {
             return mutiplier * Math.floor(elemWidth / 2);
         }
 
+        const fetchCards = (chunkSize, cardGuidList) => {
+            try {
+                self.options.fetchCards(chunkSize).then((cardArray) => {
+                    for(let i = 0; i < chunkSize; i++){
+                        self.domHandler.updateCard(cardGuidList[i], cardArray[i]);
+                    }
+                }).catch((ex) => {
+                    console.log(ex);
+                });    
+            } catch (ex) {
+                console.error(ex);
+            }
+        };
+
         return {
             getChunkSize,
-            getScrollWidth
+            getScrollWidth,
+            fetchCards
         };
     })();
 
