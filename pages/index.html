@@ -20,62 +20,84 @@
     <script type="text/javascript">
         const options1 = {
             container: 'my-carousel',
-            title: 'Fresh and just uploaded content',
-            subTitle: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempo incididunt ut labore et dolore magna aliqua',
+            title: Utility.getRandomTitle(),
+            subTitle: Utility.getRandomTitle(),
             fetchCards: (chunkSize) => {
-                const resultPromise = new Promise((resolve, reject) => {
-                    hasError = false;
-                    exception = null;
-                    const cardArray = new Array();
-                    try {
-                        for (let i = 0; i < chunkSize; cardArray.push(Utility.getCardConfiguration()), i++);
-                    } catch (ex) {
-                        hasError = true;
-                        exception = ex;
+                const chunkNumber = Utility.getRandomInt(1, 10);
+                const chunkList = new Array();
+                try {
+                    for(let i = 0; i < chunkNumber; i++){
+                        const delay = Utility.getRandomInt(2000, 10000);
+                        const promise = new Promise((resolve, reject) => {
+                            hasError = false;
+                            exception = null;
+                            const cardArray = new Array();
+                            try {
+                                for (let j = 0; j < chunkSize; cardArray.push(Utility.getCardConfiguration()), j++);
+                            } catch (ex) {
+                                hasError = true;
+                                exception = ex;
+                            }
+
+                            setTimeout(() => {
+                                if (hasError)
+                                    reject(exception);
+                                else
+                                    resolve(cardArray);
+                            }, delay);
+                        });
+
+                        chunkList.push(promise);
                     }
+                } catch (ex) {
+                    console.error(ex);
+                }
 
-                    setTimeout(() => {
-                        if (hasError)
-                            reject(exception);
-                        else
-                            resolve(cardArray);
-                    }, 2000);
-                });
-
-                return resultPromise;
+                return {chunkList, chunkNumber};
             }
         };
 
         const carousel1 = new Carousel(options1);
         const options2 = {
             container: 'my-carousel2',
-            title: 'Fresh and just uploaded content',
-            subTitle: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempo incididunt ut labore et dolore magna aliqua',
+            title: Utility.getRandomTitle(),
+            subTitle: Utility.getRandomTitle(),
             fetchCards: (chunkSize) => {
-                const resultPromise = new Promise((resolve, reject) => {
-                    hasError = false;
-                    exception = null;
-                    const cardArray = new Array();
-                    try {
-                        for (let i = 0; i < chunkSize; cardArray.push(Utility.getCardConfiguration()), i++);
-                    } catch (ex) {
-                        hasError = true;
-                        exception = ex;
+                const chunkNumber = Utility.getRandomInt(1, 10);
+                const chunkList = new Array();
+                try {
+                    for (let i = 0; i < chunkNumber; i++) {
+                        const delay = Utility.getRandomInt(2000, 10000);
+                        const promise = new Promise((resolve, reject) => {
+                            hasError = false;
+                            exception = null;
+                            const cardArray = new Array();
+                            try {
+                                for (let j = 0; j < chunkSize; cardArray.push(Utility.getCardConfiguration()), j++);
+                            } catch (ex) {
+                                hasError = true;
+                                exception = ex;
+                            }
+
+                            setTimeout(() => {
+                                if (hasError)
+                                    reject(exception);
+                                else
+                                    resolve(cardArray);
+                            }, delay);
+                        });
+
+                        chunkList.push(promise);
                     }
+                } catch (ex) {
+                    console.error(ex);
+                }
 
-                    setTimeout(() => {
-                        if (hasError)
-                            reject(exception);
-                        else
-                            resolve(cardArray);
-                    }, 1000);
-                });
-
-                return resultPromise;
+                return { chunkList, chunkNumber };
             }
         };
 
-        // const carousel2 = new Carousel(options2);
+        const carousel2 = new Carousel(options2);
     </script>
 </body>
 

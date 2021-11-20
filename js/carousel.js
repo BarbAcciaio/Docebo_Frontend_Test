@@ -1,7 +1,4 @@
 class Carousel {
-    minChunkSize = 5;
-    maxChunkSize = 10;
-
     options = {};
 
     component = null;
@@ -12,15 +9,18 @@ class Carousel {
 
     loadingImage = '../gif/loading.gif';
 
-    carouselIdSelectors = {
-        resizableContainer: 'resizableContainer',
+    chunkSize = 4;
+
+    idSelectors = {
+        title: 'title',
         cardsContainer: 'cardsContainer',
+        scrollableContainer: 'scrollableContainer',
         leftArrowButton: 'leftArrowButton',
         rightArrowButton: 'rightArrowButton',
 
     };
 
-    carouselClassSelectors = {
+    classSelectors = {
         card: 'carousel-card'
     };
 
@@ -44,73 +44,80 @@ class Carousel {
             } catch (ex) {
                 console.error(ex);
             }
-        }
+        };
 
-        const addCards = (chunkSize, right) => {
+        const addCards = (cardNumber, right) => {
             try {
-                for (let i = 0; i < chunkSize; i++){
+                let cardsHTML = '';
+                for (let i = 0; i < cardNumber; i++) {
                     const cardObj = self.templatesHandler.getDefaultCard();
                     cardsHTML += cardObj.innerHTML;
-                    this.cardGuidList.push(cardObj.guid);
-                    currentCardGuidList.push(cardObj.guid);
+                    self.cardGuidList.push(cardObj.guid);
                 }
+                const container = self.component.querySelector(`#${self.idSelectors.cardsContainer}`);
+                const containerHTML = container.innerHTML;
 
+                if(right)
+                    container.innerHTML = container.innerHTML + cardsHTML;
+                else
+                    container.innerHTML = cardsHTML + container.innerHTML;
             } catch (ex) {
-                log.error(ex);
+                console.error(ex);
             }
-        }
+        };
 
         const bindEvents = () => {
             try {
-                self.component.querySelector(`#${self.carouselIdSelectors.leftArrowButton}`).addEventListener('click', leftArrowClick);
-                self.component.querySelector(`#${self.carouselIdSelectors.rightArrowButton}`).addEventListener('click', rigthArrowClick);
+                const leftArrow = self.component.querySelector(`#${self.idSelectors.leftArrowButton}`);
+                const rightArrow = self.component.querySelector(`#${self.idSelectors.rightArrowButton}`);
+                leftArrow.addEventListener('click', leftArrowClick);
+                rightArrow.addEventListener('click', rigthArrowClick);
             } catch (ex) {
                 console.error(ex);
             }
         };
 
         const leftArrowClick = (e) => {
-            const elem = self.component.querySelector(`#${self.carouselIdSelectors.cardsContainer}`);
-            // if(elem.offsetWidth + elem.scrollLeft >= elem.scrollWidth){
+            const elem = self.component.querySelector(`#${self.idSelectors.scrollableContainer}`);
+            const scrolling = self.dataHandler.getScrollWidth(self.component.clientWidth, false);
+            if(elem.scrollLeft <= Math.abs(scrolling))
+                e.target.classList.add('hide');
 
-            // }
+            self.component.querySelector(`#${self.idSelectors.rightArrowButton}`).classList.remove('hide');
+
             elem.scrollBy({
                 top: 0,
-                left: self.dataHandler.getScrollWidth(elem.clientWidth, false),
+                left: scrolling,
                 behavior: 'smooth'
             });
         };
 
         const rigthArrowClick = (e) => {
-            const elem = self.component.querySelector(`#${self.carouselIdSelectors.cardsContainer}`);
-            // if(elem.scrollLeft)
+            const elem = self.component.querySelector(`#${self.idSelectors.scrollableContainer}`);
+            const scrolling = self.dataHandler.getScrollWidth(self.component.clientWidth, true);
+            if(elem.offsetWidth + elem.scrollLeft + scrolling >= elem.scrollWidth)
+                e.target.classList.add('hide');
+
+            self.component.querySelector(`#${self.idSelectors.leftArrowButton}`).classList.remove('hide');
             elem.scrollBy({
                 top: 0,
-                left: self.dataHandler.getScrollWidth(elem.clientWidth, true),
+                left: scrolling,
                 behavior: 'smooth'
             });
         };
 
         const render = () => {
             try {
-                const chunkSize = self.dataHandler.getChunkSize();
                 let innerHTML = '';
-                const currentCardGuidList = new Array();
-                innerHTML += self.templatesHandler.getLeftArrow();
-                innerHTML += self.templatesHandler.getRightArrow();
-                let cardsHTML = '';
-                for (let i = 0; i < chunkSize; i++){
-                    const cardObj = self.templatesHandler.getDefaultCard();
-                    cardsHTML += cardObj.innerHTML;
-                    this.cardGuidList.push(cardObj.guid);
-                    currentCardGuidList.push(cardObj.guid);
-                }
-                cardsHTML = self.templatesHandler.getResizableContainer(cardsHTML);
-                innerHTML += cardsHTML;
-                this.component.classList.add('carousel-container');
+                let arrowsHTML = '';
+                innerHTML += self.templatesHandler.getTitleContainer();
+                arrowsHTML += self.templatesHandler.getLeftArrow();
+                arrowsHTML += self.templatesHandler.getRightArrow();
+                innerHTML += self.templatesHandler.getResizableContainer(arrowsHTML);
+                this.component.classList.add('carousel');
                 this.component.innerHTML = innerHTML;
 
-                self.dataHandler.fetchCards(chunkSize, currentCardGuidList);
+                self.dataHandler.fetchCards();
             } catch (ex) {
                 console.error(ex);
             }
@@ -119,36 +126,37 @@ class Carousel {
         const init = () => {
             render();
             bindEvents();
-        }
+        };
 
-        const removeOldestCard = () =>{
-            try {
-                self.component.querySelector(`#${self.cardGuidList[0]}`).remove();
-            } catch (ex) {
-                console.error(ex);
-            }
-        }
         return {
             init,
-            updateCard
+            updateCard,
+            addCards
         };
     })();
 
     templatesHandler = (() => {
         const self = this;
 
-        const getResizableContainer = (innerHTML) => `<div id="${self.carouselIdSelectors.cardsContainer}" class="cards-container">${innerHTML}</div>`;
-
-        const getLeftArrow = () => `<a id="${this.carouselIdSelectors.leftArrowButton}" class="arrow-button left-arrow-button material-icons">
+        const getResizableContainer = (arrowsHTML) => `<div class="carousel-container">
+                                                           ${arrowsHTML}
+                                                           <div id="${self.idSelectors.scrollableContainer}" class="scrollable-container">
+                                                               <div id="${self.idSelectors.cardsContainer}" class="cards-container"></div>
+                                                           </div>
+                                                       </div>
+                                             </div>`;
+        const getTitleContainer = () => `<h2 class="title"><b>${self.options.title}</b></h2>
+                                         <h4 class="subtitle">${self.options.subTitle}</h4>`;
+        const getLeftArrow = () => `<a id="${this.idSelectors.leftArrowButton}" class="arrow-button left-arrow-button material-icons">
                                         arrow_back_ios
                                     </a>`;
 
-        const getRightArrow = () => `<a id="${this.carouselIdSelectors.rightArrowButton}" class="arrow-button right-arrow-button material-icons">
+        const getRightArrow = () => `<a id="${this.idSelectors.rightArrowButton}" class="arrow-button right-arrow-button material-icons">
                                          arrow_forward_ios
                                      </a>`;
 
         const getDefaultCard = () => {
-            const guid =`card-${Utility.createGuid()}`;
+            const guid = `card-${Utility.createGuid()}`;
             const innerHTML = `<div id="${guid}" class="carousel-card">
                                    <div class="img-container">
                                        <img id="" src="${this.loadingImage}" alt="Title" class="card-img">
@@ -165,50 +173,57 @@ class Carousel {
         const getCardTitle = (text) => `<h4><b>${text}</b></h4>`;
 
         return {
-            getDefaultCard, 
+            getDefaultCard,
             getResizableContainer,
             getLeftArrow,
             getRightArrow,
-            getCardTitle
+            getCardTitle,
+            getTitleContainer
         };
     })();
 
     dataHandler = (() => {
         const self = this;
-        const getChunkSize = () => {
-            // return Utility.getRandomInt(this.minChunkSize, this.maxChunkSize);
-            return 20;
-        }
 
         const getScrollWidth = (elemWidth, isForward) => {
             const mutiplier = isForward ? 1 : -1;
             return mutiplier * Math.floor(elemWidth / 2);
         }
 
-        const fetchCards = (chunkSize, cardGuidList) => {
+        const handleChunk = (cardArray) => {
             try {
-                self.options.fetchCards(chunkSize).then((cardArray) => {
-                    for(let i = 0; i < chunkSize; i++){
-                        self.domHandler.updateCard(cardGuidList[i], cardArray[i]);
-                    }
-                }).catch((ex) => {
-                    console.log(ex);
-                });    
+                for(const index in cardArray)
+                    self.domHandler.updateCard(self.cardGuidList.shift(), cardArray[index]);
+            } catch (ex) {
+                console.error(ex);
+            }
+        }
+
+        const fetchCards = () => {
+            try {
+                const chunkData = self.options.fetchCards(self.chunkSize);
+                self.domHandler.addCards(chunkData.chunkNumber * self.chunkSize, true);
+                for (const index in chunkData.chunkList) {
+                    chunkData.chunkList[index].then((cardArray) => {
+                        handleChunk(cardArray);
+                    }).catch((ex) => {
+                        console.error(ex);
+                    });
+                }
             } catch (ex) {
                 console.error(ex);
             }
         };
 
         return {
-            getChunkSize,
             getScrollWidth,
             fetchCards
         };
     })();
 
     init = () => {
-        for (let elem in this.carouselIdSelectors) {
-            this.carouselIdSelectors[elem] += '-' + this.guid;
+        for (let elem in this.idSelectors) {
+            this.idSelectors[elem] += '-' + this.guid;
         }
         this.domHandler.init();
     };
