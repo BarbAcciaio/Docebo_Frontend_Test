@@ -104,7 +104,7 @@ class Utility {
 
     static getCardConfiguration() {
         const image = this.getImage(this.getRandomInt(300, 1000));
-        const rnd = this.getRandomInt(0, 4);
+        const rnd = this.getRandomInt(0, 3);
         const duration = this.getRandomInt(10, 3600);
         const type = Object.keys(this.typesList)[rnd];
         const cardinality = this.typesList[type];

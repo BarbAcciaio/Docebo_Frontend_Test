@@ -11,6 +11,8 @@ class Carousel {
 
     chunkSize = 4;
 
+    pos = { left: 0, x: 0};
+
     idSelectors = {
         title: 'title',
         cardsContainer: 'cardsContainer',
@@ -41,6 +43,10 @@ class Carousel {
 
                 card.querySelector('img').src = cardOptions.image;
                 card.querySelector('div.card-title').innerHTML = self.templatesHandler.getCardTitle(cardOptions.title);
+                card.querySelector('p.card-duration').innerHTML = self.dataHandler.getDuration(cardOptions.duration);
+                card.querySelector('p.card-type').innerHTML = cardOptions.type;
+                if(cardOptions.cardinality === 'collection')
+                    card.classList.add('stack');
             } catch (ex) {
                 console.error(ex);
             }
@@ -55,12 +61,13 @@ class Carousel {
                     self.cardGuidList.push(cardObj.guid);
                 }
                 const container = self.component.querySelector(`#${self.idSelectors.cardsContainer}`);
-                const containerHTML = container.innerHTML;
 
                 if(right)
                     container.innerHTML = container.innerHTML + cardsHTML;
                 else
                     container.innerHTML = cardsHTML + container.innerHTML;
+
+                checkScroll(container);
             } catch (ex) {
                 console.error(ex);
             }
@@ -68,10 +75,8 @@ class Carousel {
 
         const bindEvents = () => {
             try {
-                const leftArrow = self.component.querySelector(`#${self.idSelectors.leftArrowButton}`);
-                const rightArrow = self.component.querySelector(`#${self.idSelectors.rightArrowButton}`);
-                leftArrow.addEventListener('click', leftArrowClick);
-                rightArrow.addEventListener('click', rigthArrowClick);
+                self.component.querySelector(`#${self.idSelectors.leftArrowButton}`).addEventListener('click', leftArrowClick);
+                self.component.querySelector(`#${self.idSelectors.rightArrowButton}`).addEventListener('click', rigthArrowClick);
             } catch (ex) {
                 console.error(ex);
             }
@@ -123,6 +128,17 @@ class Carousel {
             }
         };
 
+        const checkScroll = (container) => {
+            try {
+                self.component.querySelector(`#${self.idSelectors.leftArrowButton}`).classList.add('hide');
+                if(self.component.clientWidth >= container.clientWidth){
+                    self.component.querySelector(`#${self.idSelectors.rightArrowButton}`).classList.add('hide');
+                }
+            } catch (ex) {
+                console.error(ex);
+            }
+        }
+
         const init = () => {
             render();
             bindEvents();
@@ -145,7 +161,8 @@ class Carousel {
                                                            </div>
                                                        </div>
                                              </div>`;
-        const getTitleContainer = () => `<h2 class="title"><b>${self.options.title}</b></h2>
+        const getTitleContainer = () => `<span class="material-icons font-48">photo_camera</span>
+                                         <span class="title font-48"><b>${self.options.title}</b></span>
                                          <h4 class="subtitle">${self.options.subTitle}</h4>`;
         const getLeftArrow = () => `<a id="${this.idSelectors.leftArrowButton}" class="arrow-button left-arrow-button material-icons">
                                         arrow_back_ios
@@ -158,9 +175,9 @@ class Carousel {
         const getDefaultCard = () => {
             const guid = `card-${Utility.createGuid()}`;
             const innerHTML = `<div id="${guid}" class="carousel-card">
-                                   <div class="img-container">
-                                       <img id="" src="${this.loadingImage}" alt="Title" class="card-img">
-                                   </div>
+                                   <img src="${this.loadingImage}" alt="Title" class="card-img">
+                                   <p class="card-type"></p>
+                                   <p class="card-duration"></p>
                                    <div class="card-title">
                                        <div class="default-card-row-1"></div>
                                        <div class="default-card-row-2"></div>
@@ -185,9 +202,11 @@ class Carousel {
     dataHandler = (() => {
         const self = this;
 
-        const getScrollWidth = (elemWidth, isForward) => {
+        const getScrollWidth = (containerWidth, isForward) => {
+            const cardWidth = self.component.querySelector(`.${self.classSelectors.card}`).clientWidth;
             const mutiplier = isForward ? 1 : -1;
-            return mutiplier * Math.floor(elemWidth / 2);
+            const nCards = Math.floor(containerWidth / cardWidth);
+            return mutiplier * cardWidth * nCards;
         }
 
         const handleChunk = (cardArray) => {
@@ -202,7 +221,8 @@ class Carousel {
         const fetchCards = () => {
             try {
                 const chunkData = self.options.fetchCards(self.chunkSize);
-                self.domHandler.addCards(chunkData.chunkNumber * self.chunkSize, true);
+                const cardNumber = chunkData.chunkNumber * self.chunkSize;
+                self.domHandler.addCards(cardNumber, true);
                 for (const index in chunkData.chunkList) {
                     chunkData.chunkList[index].then((cardArray) => {
                         handleChunk(cardArray);
@@ -215,9 +235,17 @@ class Carousel {
             }
         };
 
+        const getDuration = (totalSeconds) => {
+            const hours = Math.floor(totalSeconds / 3600);
+            const minutes = Math.floor((totalSeconds - (hours * 3600)) / 60);
+            const seconds = Math.floor(totalSeconds - (hours * 3600) - (minutes * 60))
+            return `${hours > 0 ? hours : '00'}:${minutes > 0 ? minutes : '00'}:${seconds > 0 ? seconds : '00'}`;
+        };
+
         return {
             getScrollWidth,
-            fetchCards
+            fetchCards,
+            getDuration
         };
     })();
 
