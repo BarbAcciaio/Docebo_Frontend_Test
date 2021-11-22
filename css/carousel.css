@@ -1,186 +1,174 @@
-/* Root section */
-:root{
-    --carousel-height: 300px !important;
-    --invisible-item: rgba(0,0,0,0) !important;
-    --arrow-button-base-color: rgba(150, 150, 150, 0.4) !important;
-    --arrow-button-active-color:rgba(150, 150, 150, 1) !important;
-}
-/* Id section*/
-
-/* Class section */
-
-/* Carousel container properties */
-.carousel-container{
-    justify-content:center !important;
-    align-items:center !important;
-    width: calc(100% - 3px);
-    height:var(--carousel-height);
-    /* border: solid 1px !important;
-    border-color:rgba(200, 200, 200, 0.8) !important; */
-    border-radius: 5px !important;
-    position: relative;
-    overflow: hidden;
+.carousel-container {
+  -webkit-box-pack: center !important;
+      -ms-flex-pack: center !important;
+          justify-content: center !important;
+  -webkit-box-align: center !important;
+      -ms-flex-align: center !important;
+          align-items: center !important;
+  width: calc(100% - 3px);
+  height: 300px !important;
+  border-radius: 5px !important;
+  position: relative;
+  overflow: hidden;
 }
 
-.container{
-    height: 350px !important;
+.container {
+  height: 350px !important;
 }
 
-.scrollable-container{
-    height: var(--carousel-height);
-    overflow-x: auto;
-    overflow-y: hidden;
-    width: 100%;
+.scrollable-container {
+  height: 300px !important;
+  overflow-x: auto;
+  overflow-y: hidden;
+  width: 100%;
 }
 
-    .scrollable-container::-webkit-scrollbar {
-        display: none;
-    } 
-
-.cards-container{
-    display:flex !important;
-    justify-content:center !important;
-    align-items:center !important;
-    height: var(--carousel-height);
-    overflow: hidden;
-    width:fit-content;
-
+.scrollable-container::-webkit-scrollbar {
+  display: none;
 }
 
-/* Arrow button properties */
-.arrow-button{
-    height: 100% !important;
-    background-color: rgba(0, 0, 0, 0) !important;
-    width: 50px !important;
-    transition: background-color 0.5s ease;
-    z-index: 100;
-    position: absolute;
-    text-align: center;
-    line-height: var(--carousel-height);
-    color: var(--invisible-item);
-    cursor: pointer;
-    -webkit-touch-callout: none;
-    -webkit-user-select: none;
-    -khtml-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-    user-select: none;
+.cards-container {
+  display: -webkit-box !important;
+  display: -ms-flexbox !important;
+  display: flex !important;
+  -webkit-box-pack: center !important;
+      -ms-flex-pack: center !important;
+          justify-content: center !important;
+  -webkit-box-align: center !important;
+      -ms-flex-align: center !important;
+          align-items: center !important;
+  height: 300px !important;
+  overflow: hidden;
+  width: -webkit-fit-content;
+  width: -moz-fit-content;
+  width: fit-content;
 }
 
-    /* Arrow button hover transition */
-    .arrow-button:hover{
-        background-color: rgba(150, 150, 150, 0.5) !important;
-        color: rgba(255,255,255,1) !important;
-    }
-
-    /* Arrow button active transition */
-    .arrow-button:active{
-        background-color: rgba(150, 150, 150, 1) !important;
-    }
-
-.hide{
-    display: none;
+.arrow-button {
+  height: 100% !important;
+  background-color: rgba(0, 0, 0, 0) !important;
+  width: 50px !important;
+  -webkit-transition: background-color 0.5s ease;
+  transition: background-color 0.5s ease;
+  z-index: 100;
+  position: absolute;
+  text-align: center;
+  line-height: 300px !important;
+  color: rgba(0, 0, 0, 0) !important;
+  cursor: pointer;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
 }
+
+.arrow-button:hover {
+  background-color: rgba(150, 150, 150, 0.5) !important;
+  color: white !important;
+}
+
+.arrow-button :active {
+  background-color: #969696 !important;
+}
+
+.hide {
+  display: none;
+}
+
 /* Backward arrow button properties */
-.left-arrow-button{
-    left: 0px;
+.left-arrow-button {
+  left: 0px;
 }
 
 /* Forward arrow button properties */
-.right-arrow-button{
-    right: 0px;
+.right-arrow-button {
+  right: 0px;
 }
 
-.carousel-card{
-    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
-    transition: 0.3s;
-    width: 200px !important;
-    height: 90%;
-    z-index: 98;
-    margin-left: 3px;
-    margin-right: 3px;
-    border: solid 1px;
-    border-color: rgba(200,200,200,1);
-    position: relative;
+.carousel-card {
+  -webkit-box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+          box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+  -webkit-transition: 0.3s;
+  transition: 0.3s;
+  width: 200px !important;
+  height: 90%;
+  z-index: 98;
+  margin-left: 3px;
+  margin-right: 3px;
+  border: solid 1px;
+  border-color: #c8c8c8;
+  position: relative;
 }
 
-.carousel-card.stack{
-    box-shadow: 
-        /* The top layer shadow */
-        0 1px 1px rgba(0,0,0,0.15),
-        /* The second layer */
-        0 10px 0 -5px white,
-        /* The second layer shadow */
-        0 10px 1px -4px rgba(0,0,0,0.20),
-         /* The third layer */
-        0 20px 0 -10px white,
-        /* The third layer shadow */
-        0 20px 1px -9px rgba(0,0,0,0.20),
-        0 4px 8px 0 rgba(0,0,0,0.2);
+.carousel-card.stack {
+  -webkit-box-shadow: 0 1px 1px rgba(0, 0, 0, 0.15), 0 10px 0 -5px white, 0 10px 1px -4px rgba(0, 0, 0, 0.2), 0 20px 0 -10px white, 0 20px 1px -9px rgba(0, 0, 0, 0.2), 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+          box-shadow: 0 1px 1px rgba(0, 0, 0, 0.15), 0 10px 0 -5px white, 0 10px 1px -4px rgba(0, 0, 0, 0.2), 0 20px 0 -10px white, 0 20px 1px -9px rgba(0, 0, 0, 0.2), 0 4px 8px 0 rgba(0, 0, 0, 0.2);
 }
 
-    /* .carousel-card:hover{
-        box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
-    } */
-
-.card-title{
-    padding-left: 15px;
-    width: inherit;
-    position: absolute;
-}
-.card-title .default-card-row-1{
-    min-height: 10px;
-    width: 70%;
-    background-color: darkgrey;
+.card-title {
+  padding-left: 15px;
+  width: inherit;
+  position: absolute;
 }
 
-.card-title .default-card-row-2{
-    min-height: 10px;
-    width: 50%;
-    background-color: darkgrey;
-    margin-top:10px;
-
+.card-title .default-card-row-1 {
+  min-height: 10px;
+  width: 70%;
+  background-color: darkgrey;
 }
 
-.card-type{
-    width: fit-content;
-    max-width: fit-content;
-    position: absolute;
-    top: 46%;
-    left: 0px;
-    color: white;
-    background-color: rgba(0,0,0,0.5);
-    padding-left: 10px;
-    padding-right:10px
+.card-title .default-card-row-2 {
+  min-height: 10px;
+  width: 50%;
+  background-color: darkgrey;
+  margin-top: 10px;
 }
 
-.card-duration{
-    width: fit-content;
-    max-width: fit-content;
-    position: absolute;
-    top: 46%;
-    color: white;
-    right: 0px;
-    background-color: rgba(0,0,0,0.5);
-    padding-left: 10px;
-    padding-right: 10px;
+.card-type {
+  width: -webkit-fit-content;
+  width: -moz-fit-content;
+  width: fit-content;
+  max-width: -webkit-fit-content;
+  max-width: -moz-fit-content;
+  max-width: fit-content;
+  position: absolute;
+  top: 46%;
+  left: 0px;
+  color: white;
+  background-color: rgba(0, 0, 0, 0.5);
+  padding-left: 10px;
+  padding-right: 10px;
 }
 
-
-/* .img-container{
-    width: 100% !important;
-    height: 150px;
-    border-radius: inherit;
-} */
-
-.card-img{
-    width: 100% !important;
-    height: 60%;
-    z-index: 49;
+.card-duration {
+  width: -webkit-fit-content;
+  width: -moz-fit-content;
+  width: fit-content;
+  max-width: -webkit-fit-content;
+  max-width: -moz-fit-content;
+  max-width: fit-content;
+  position: absolute;
+  top: 46%;
+  color: white;
+  right: 0px;
+  background-color: rgba(0, 0, 0, 0.5);
+  padding-left: 10px;
+  padding-right: 10px;
 }
 
-.font-48{
-    font-size: 48px;
+.card-img {
+  width: 100% !important;
+  height: 60%;
+  z-index: 49;
 }
 
-/* Attributes section */
+.font-48 {
+  font-size: 48px;
+}
+
+.subtitle {
+  margin-top: 10px;
+  color: rgba(100, 100, 100, 0.8);
+}
+/*# sourceMappingURL=carousel.css.map */

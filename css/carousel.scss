@@ -1,0 +1,168 @@
+$carousel-height: 300px !important;
+$invisible-item: rgba(0,0,0,0) !important;
+$arrow-button-base-color: rgba(150, 150, 150, 0.4) !important;
+$arrow-button-active-color: rgba(150, 150, 150, 1) !important;
+
+.carousel-container{
+    justify-content:center !important;
+    align-items:center !important;
+    width: calc(100% - 3px);
+    height:$carousel-height;
+    border-radius: 5px !important;
+    position: relative;
+    overflow: hidden;
+}
+
+.container{
+    height: 350px !important;
+}
+
+.scrollable-container{
+    height: $carousel-height;
+    overflow-x: auto;
+    overflow-y: hidden;
+    width: 100%;
+
+    &::-webkit-scrollbar{
+        display: none;
+    }
+}
+
+.cards-container{
+    display:flex !important;
+    justify-content:center !important;
+    align-items:center !important;
+    height: $carousel-height;
+    overflow: hidden;
+    width:fit-content;
+}
+
+.arrow-button{
+    height: 100% !important;
+    background-color: rgba(0, 0, 0, 0) !important;
+    width: 50px !important;
+    transition: background-color 0.5s ease;
+    z-index: 100;
+    position: absolute;
+    text-align: center;
+    line-height: $carousel-height;
+    color: $invisible-item;
+    cursor: pointer;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+
+    &:hover{
+        background-color: rgba(150, 150, 150, 0.5) !important;
+        color: rgba(255,255,255,1) !important;
+    }
+
+    :active{
+        background-color: rgba(150, 150, 150, 1) !important;
+    }
+}
+
+.hide{
+    display: none;
+}
+
+/* Backward arrow button properties */
+.left-arrow-button{
+    left: 0px;
+}
+
+/* Forward arrow button properties */
+.right-arrow-button{
+    right: 0px;
+}
+
+.carousel-card{
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+    transition: 0.3s;
+    width: 200px !important;
+    height: 90%;
+    z-index: 98;
+    margin-left: 3px;
+    margin-right: 3px;
+    border: solid 1px;
+    border-color: rgba(200,200,200,1);
+    position: relative;
+
+    &.stack{
+        box-shadow: 
+            /* The top layer shadow */
+            0 1px 1px rgba(0,0,0,0.15),
+            /* The second layer */
+            0 10px 0 -5px white,
+            /* The second layer shadow */
+            0 10px 1px -4px rgba(0,0,0,0.20),
+            /* The third layer */
+            0 20px 0 -10px white,
+            /* The third layer shadow */
+            0 20px 1px -9px rgba(0,0,0,0.20),
+            0 4px 8px 0 rgba(0,0,0,0.2);
+    }
+}
+
+.card-title{
+    padding-left: 15px;
+    width: inherit;
+    position: absolute;
+
+    & .default-card-row-1{
+        min-height: 10px;
+        width: 70%;
+        background-color: darkgrey;
+    }
+
+    & .default-card-row-2{
+        min-height: 10px;
+        width: 50%;
+        background-color: darkgrey;
+        margin-top:10px;
+    }
+}
+
+.card-type{
+    width: fit-content;
+    max-width: fit-content;
+    position: absolute;
+    top: 46%;
+    left: 0px;
+    color: white;
+    background-color: rgba(0,0,0,0.5);
+    padding-left: 10px;
+    padding-right:10px
+}
+
+.card-duration{
+    width: fit-content;
+    max-width: fit-content;
+    position: absolute;
+    top: 46%;
+    color: white;
+    right: 0px;
+    background-color: rgba(0,0,0,0.5);
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+.card-img{
+    width: 100% !important;
+    height: 60%;
+    z-index: 49;
+}
+
+.font-48{
+    font-size: 48px;
+}
+
+.subtitle{
+    margin-top: 10px;
+    color:rgba(100, 100, 100, 0.8)
+}
+
+

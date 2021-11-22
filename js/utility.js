@@ -1,6 +1,18 @@
+/**
+ * Utility methods and properties
+ */
 class Utility {
+    /**
+     * 
+     * @param {number} min min value
+     * @param {number} max max value
+     * @returns {number} random integer between min and max
+     */
     static getRandomInt = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
 
+    /**
+     * Utility array to compose random title
+     */
     static noun = new Array(
         "Dream", "Dreamer", "Dreams", "Waves",
         "Sword", "Kiss", "Sex", "Lover",
@@ -56,6 +68,9 @@ class Utility {
         "Truth", "Edge"
     );
 
+    /**
+     * Utility array to compose random title
+     */
     static adjective = new Array(
         "Lost", "Only", "Last", "First",
         "Third", "Sacred", "Bold", "Lovely",
@@ -91,6 +106,9 @@ class Utility {
         "Ragged", "Broken", "Cracked", "Splintered"
     );
 
+    /**
+     * Association between card type and card cardinality
+     */
     static typesList = {
         video: 'single',
         elearning: 'single',
@@ -98,20 +116,29 @@ class Utility {
         playlist: 'collection'
     };
 
-    static image = 'https://thispersondoesnotexist.com/image';
-
+    /**
+     * 
+     * @param {number} size 
+     * @returns {string} link to random image
+     */
     static getImage = (size) => `https://picsum.photos/${size}`;
 
+    /**
+     * @returns {object} single card configuration
+     */
     static getCardConfiguration() {
         const image = this.getImage(this.getRandomInt(300, 1000));
         const rnd = this.getRandomInt(0, 3);
         const duration = this.getRandomInt(10, 3600);
-        const type = Object.keys(this.typesList)[rnd];
+        const type = Object.keys(this.typesList)[rnd].replace('_', ' ');
         const cardinality = this.typesList[type];
 
         return { image, type, duration, title: this.getRandomTitle(), cardinality };
     }
 
+    /**
+     * @returns {string} Returns a random title
+     */
     static getRandomTitle(){
         const a = this.getRandomInt(0, this.noun.length);
         const b = this.getRandomInt(0, this.adjective.length);
@@ -119,6 +146,10 @@ class Utility {
         return this.adjective[b] + " " + this.noun[a];
     }
 
+    /**
+     * 
+     * @returns {string} a GUID
+     */
     static createGuid(){
         const s4 = () => Math.floor((1 + Math.random()) * 0x10000).toString(16).substring(1);
         return s4() + s4() + '-' + s4() + '-' + s4() + '-' + s4() + '-' + s4() + s4() + s4();

@@ -19,9 +19,14 @@
 
     <script type="text/javascript">
         const options1 = {
+            // Carousel container Id
             container: 'my-carousel',
+            // Carousel title
             title: Utility.getRandomTitle(),
+            // Carousel subtitle
             subTitle: Utility.getRandomTitle(),
+            // Fake api method
+            // Returns promise array. Each element in the array is resolved after a random timeout
             fetchCards: (chunkSize) => {
                 const chunkNumber = Utility.getRandomInt(1, 10);
                 const chunkList = new Array();
@@ -57,7 +62,9 @@
             }
         };
 
+        // Instantiating carousel component
         const carousel1 = new Carousel(options1);
+
         const options2 = {
             container: 'my-carousel2',
             title: Utility.getRandomTitle(),
@@ -97,7 +104,7 @@
             }
         };
 
-        const carousel2 = new Carousel(options2);
+        // const carousel2 = new Carousel(options2);
     </script>
 </body>
 
